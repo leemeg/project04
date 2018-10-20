@@ -25,6 +25,7 @@ let titleValue, action, stars;
  * @returns {null}
  */
 function main() {
+
     while (action !== 99) {//loops program indefinitely
 
         while (movieInfo.length === 0) {//sets first movie info
@@ -32,8 +33,7 @@ function main() {
         }
         chooseAction();
         branchAction();
-        console.log(movieInfo);
-        console.log(movieInfo[titleValue][2]);
+
     }
 
 }
@@ -42,7 +42,7 @@ main();
 
 
 function setmovieInfo() {
-    let i = (movieInfo.length - 1);
+    let i = (movieInfo.length);
     if (i < 0){
         i = 0;
     }
@@ -59,33 +59,31 @@ function setmovieInfo() {
     movieInfo[i][2] = [];
     movieInfo[i][2][0] = movieInfo[i][1];
     movieInfo[i][3] = 1;
+    movieInfo[i][4] = movieInfo[i][1];
     console.log(`\x1Bc`);
     console.log(`\nThank you for your input. `)
 
 }
 
-
-
 function chooseTitle() {
     const MIN_ACTION = 1;
-
-    while (titleValue == null || titleValue > (movieInfo.length + 1) || titleValue < MIN_ACTION || !/[0-9]/.test(titleValue)) {
-        console.log(`Which movie would you like to rate? `);
+    titleValue = null;
+    while (titleValue === null || titleValue > (movieInfo.length) || titleValue < MIN_ACTION || !/[0-9]/.test(titleValue)) {
+        console.log(`Which movie would you like to select ? `);
         for (let i = 0; i < movieInfo.length; i++) {
             console.log(`[${i + 1}] ${movieInfo[i][0]}`);
         }
         titleValue = Number(PROMPT.question(`Please enter the appropriate value [1-${movieInfo.length}]: `));
-        if (titleValue == null || titleValue > (movieInfo.length + 1) || titleValue < MIN_ACTION || !/[0-9]/.test(titleValue)) {
-            console.log(`\x1Bc`);
+        if (titleValue === null || titleValue > (movieInfo.length) || titleValue < MIN_ACTION || !/[0-9]/.test(titleValue)) {
+            //console.log(`\x1Bc`);
             console.log(`not a valid option, please try again.`);
         }
     }
     titleValue--;
 }
 
-
 function chooseAction() {
-    const MAX_ACTION = 3;
+    const MAX_ACTION = 4;
     const MIN_ACTION = 1;
     action = null;
     while (action === null || action > MAX_ACTION || action < MIN_ACTION || !/[0-9]/.test(action)) {
@@ -93,6 +91,7 @@ function chooseAction() {
         console.log(`\n[1] Rate a movie.`);
         console.log(`[2] View a movie's average rating.`);
         console.log(`[3] Add a new movie. `);
+        console.log(`[4] Refresh movie order of highest to lowest ratings. `);
         action = Number(PROMPT.question(`\nPlease enter the appropriate value [1-${MAX_ACTION}]: `));
         if (action === null || action > MAX_ACTION || action < MIN_ACTION || !/[0-9]/.test(action)) {
             console.log(`\x1Bc`);
@@ -101,16 +100,10 @@ function chooseAction() {
     }
 }
 
-
-
-/**
- * @method
- * @desc
- * @returns{method}
- */
 function branchAction() {
     switch (action) {
         case 1:
+            //dispTitles();
             chooseTitle();
             setStars();
             //movieInfo[titleValue][2] = [];
@@ -120,17 +113,25 @@ function branchAction() {
 
             break;
         case 2:
+            dispTitles();
             chooseTitle();
-
+            calcAverage();
+            console.log(`\nThe average rating for the move ${movieInfo[titleValue][0]} is ${movieInfo[titleValue][4]} stars. `);
+            break;
+        case 3:
+            setmovieInfo();
             break;
         default:
-            setmovieInfo();
+            for (let e = 0; e < movieInfo.length; e++){
+                titleValue = e;
+                calcAverage();
+            }
+            setrateOrder();
+            dispTitles();
+            break;
     }
 
 }
-
-
-
 
 function setStars() {
     const MIN_STAR = 0;
@@ -147,5 +148,34 @@ function setStars() {
 
 }
 
+function calcAverage() {
+    let sum = 0;
 
+    for (let i = 0; i < movieInfo[titleValue][2].length; i++) {
+        sum = sum + movieInfo[titleValue][2][i];
+    }
+    movieInfo[titleValue][4] = (sum / movieInfo[titleValue][2].length).toFixed(1);
 
+}
+
+function setrateOrder() {
+    let unsort = movieInfo.length - 1;
+    for (let y = 0; y < unsort; y++) {
+        for (let x = 0; x < unsort; x++){
+            if (movieInfo[x + 1][4] > movieInfo[x][4]){
+                let temp = movieInfo[x + 1];
+                movieInfo[x + 1] = movieInfo[x];
+                movieInfo[x] = temp;
+            }
+        }
+        //unsort--
+    }
+
+}
+
+function dispTitles() {
+    for (let i =0; i < movieInfo.length; i++){
+        console.log(`[${movieInfo[i][4]}] ${movieInfo[i][0]}`);
+    }
+
+}
