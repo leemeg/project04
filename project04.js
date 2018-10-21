@@ -47,6 +47,7 @@ function setmovieInfo() {
         i = 0;
     }
     movieInfo[i] = [];
+    console.log(`\x1Bc`);
     while (! movieInfo[i][0] || !/^[a-zA-Z -]{1,50}$/.test(movieInfo[i][0])){
         movieInfo[i][0] = PROMPT.question(`Please enter movie title: `);
         if (!/^[a-zA-Z -]{1,50}$/.test(movieInfo[i][0])){
@@ -68,8 +69,8 @@ function setmovieInfo() {
 function chooseTitle() {
     const MIN_ACTION = 1;
     titleValue = null;
+    //console.log(`\n`);
     while (titleValue === null || titleValue > (movieInfo.length) || titleValue < MIN_ACTION || !/[0-9]/.test(titleValue)) {
-        console.log(`Which movie would you like to select ? `);
         for (let i = 0; i < movieInfo.length; i++) {
             console.log(`[${i + 1}] ${movieInfo[i][0]}`);
         }
@@ -91,7 +92,7 @@ function chooseAction() {
         console.log(`\n[1] Rate a movie.`);
         console.log(`[2] View a movie's average rating.`);
         console.log(`[3] Add a new movie. `);
-        console.log(`[4] Refresh movie order of highest to lowest ratings. `);
+        console.log(`[4] View and refresh movie order of highest to lowest ratings. `);
         action = Number(PROMPT.question(`\nPlease enter the appropriate value [1-${MAX_ACTION}]: `));
         if (action === null || action > MAX_ACTION || action < MIN_ACTION || !/[0-9]/.test(action)) {
             console.log(`\x1Bc`);
@@ -103,25 +104,28 @@ function chooseAction() {
 function branchAction() {
     switch (action) {
         case 1:
-            //dispTitles();
+            console.log(`\x1Bc`);
+            console.log(`Which movie would you like to rate? `);
             chooseTitle();
             setStars();
-            //movieInfo[titleValue][2] = [];
             movieInfo[titleValue][1] = Number(stars);
             movieInfo[titleValue][2].push(Number(stars));
             movieInfo[titleValue][3]++;
 
             break;
         case 2:
-            dispTitles();
+            console.log(`\x1Bc`);
+            console.log(`Which movie would you like to view? `);
             chooseTitle();
             calcAverage();
+            console.log(`\x1Bc`);
             console.log(`\nThe average rating for the move ${movieInfo[titleValue][0]} is ${movieInfo[titleValue][4]} stars. `);
             break;
         case 3:
             setmovieInfo();
             break;
         default:
+            console.log(`\x1Bc`);
             for (let e = 0; e < movieInfo.length; e++){
                 titleValue = e;
                 calcAverage();
@@ -137,6 +141,7 @@ function setStars() {
     const MIN_STAR = 0;
     const MAX_STAR = 5;
     stars = null;
+    console.log(`\x1Bc`);
     while (stars == null || stars < MIN_STAR || stars > MAX_STAR || !/[0-9]/.test(stars)) {
         console.log(`\nWith 0 stars being worst and 5 stars equaling the best, how would you rate the movie "${movieInfo[titleValue][0]}" ?`);
         stars = PROMPT.question(`Please enter a number from 0 to 5 representing how many stars you would give this movie: `);
@@ -144,6 +149,7 @@ function setStars() {
             console.log(`\nIncorrect rating, please try again.`);
         }
     }
+    console.log(`\x1Bc`);
     console.log(`\nThank you for your vote of ` + stars + ` stars.`);
 
 }
@@ -168,14 +174,17 @@ function setrateOrder() {
                 movieInfo[x] = temp;
             }
         }
-        //unsort--
+
     }
 
 }
 
 function dispTitles() {
+    console.log(`\x1Bc`);
+    console.log(`Average Stars     Movie Title`);
+    console.log(`-------------     -----------`);
     for (let i =0; i < movieInfo.length; i++){
-        console.log(`[${movieInfo[i][4]}] ${movieInfo[i][0]}`);
+        console.log(`     ${movieInfo[i][4]}          ${movieInfo[i][0]}`);
     }
 
 }
