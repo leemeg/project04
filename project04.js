@@ -8,59 +8,53 @@
 "use strict";
 const PROMPT = require('readline-sync');
 
-
+const STARTERTITLES = ["The Hate U Give", "Halloween", "First Man", "Venom", "Bad Times", "Night School", "Goosebumps", "Star is Born"];
 
 let movieInfo = [];
-
 
 let titleValue, action, stars;
 
 
-
-
-
-/**
- * @method
- * @desc The dispatch method for our program
- * @returns {null}
- */
 function main() {
-
-    while (action !== 99) {//loops program indefinitely
-
-        while (movieInfo.length === 0) {//sets first movie info
+    startTitles();
+    while (action !== 99) {//loops program indefinitely, could add a stop in chooseAction()
+        while (movieInfo.length === 0) {//auto sets first movies info
             setmovieInfo();
         }
         chooseAction();
         branchAction();
-
     }
-
 }
 
 main();
 
 
 function setmovieInfo() {
+    const MOVIE_TITLE = 0;
+    const CURRENT_USER_RATING = 1;
+    const ARRAY_OF_VOTES = 2;
+    const NUM_VOTES = 3;
+    const AVER_RATING = 4;
+
     let i = (movieInfo.length);
     if (i < 0){
         i = 0;
     }
     movieInfo[i] = [];
     console.log(`\x1Bc`);
-    while (! movieInfo[i][0] || !/^[a-zA-Z -]{1,50}$/.test(movieInfo[i][0])){
-        movieInfo[i][0] = PROMPT.question(`Please enter movie title: `);
-        if (!/^[a-zA-Z -]{1,50}$/.test(movieInfo[i][0])){
+    while (! movieInfo[i][MOVIE_TITLE] || !/^[a-zA-Z -]{1,50}$/.test(movieInfo[i][0])){
+        movieInfo[i][MOVIE_TITLE] = PROMPT.question(`Please enter movie title: `);
+        if (!/^[a-zA-Z -]{1,50}$/.test(movieInfo[i][MOVIE_TITLE])){
             console.log(`$(movieInfo[i][0]} is not valid, Please enter movie title)`);
         }
     }
     titleValue = i;
     setStars();
-    movieInfo[i][1] = Number(stars);
-    movieInfo[i][2] = [];
-    movieInfo[i][2][0] = movieInfo[i][1];
-    movieInfo[i][3] = 1;
-    movieInfo[i][4] = movieInfo[i][1];
+    movieInfo[i][CURRENT_USER_RATING] = Number(stars);
+    movieInfo[i][ARRAY_OF_VOTES] = [];
+    movieInfo[i][ARRAY_OF_VOTES][0] = movieInfo[i][1];
+    movieInfo[i][NUM_VOTES] = 1;
+    movieInfo[i][AVER_RATING] = movieInfo[i][1];
     console.log(`\x1Bc`);
     console.log(`\nThank you for your input. `)
 
@@ -94,7 +88,7 @@ function chooseAction() {
         console.log(`[3] Add a new movie. `);
         console.log(`[4] View and refresh movie order of highest to lowest ratings. `);
         action = Number(PROMPT.question(`\nPlease enter the appropriate value [1-${MAX_ACTION}]: `));
-        if (action === null || action > MAX_ACTION || action < MIN_ACTION || !/[0-9]/.test(action)) {
+        if (action === null || action === null || action > MAX_ACTION || action < MIN_ACTION || !/[0-9]/.test(action)) {
             console.log(`\x1Bc`);
             console.log(`not a valid option, please try again.`);
         }
@@ -181,10 +175,25 @@ function setrateOrder() {
 
 function dispTitles() {
     console.log(`\x1Bc`);
-    console.log(`Average Stars     Movie Title`);
-    console.log(`-------------     -----------`);
+    console.log(`Average Stars         Movie Title`);
+    console.log(`-------------         -----------`);
     for (let i =0; i < movieInfo.length; i++){
-        console.log(`     ${movieInfo[i][4]}          ${movieInfo[i][0]}`);
+        let tempAver = movieInfo[i][4];
+
+        if (!/[0-9]/.test(tempAver)){
+            console.log(`   Unrated            ${movieInfo[i][0]}`)
+        }
+        else {
+            console.log(`     ${movieInfo[i][4]}              ${movieInfo[i][0]}`);
+        }
     }
 
+}
+
+function startTitles() {
+    for (let i = 0; i < STARTERTITLES.length; i++){
+        movieInfo[i] = [];
+        movieInfo[i][0] = STARTERTITLES[i];
+        movieInfo[i][2] = [];
+    }
 }
