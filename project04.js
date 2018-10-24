@@ -45,7 +45,7 @@ function setmovieInfo() {
     while (! movieInfo[i][MOVIE_TITLE] || !/^[a-zA-Z -]{1,50}$/.test(movieInfo[i][0])){
         movieInfo[i][MOVIE_TITLE] = PROMPT.question(`Please enter movie title: `);
         if (!/^[a-zA-Z -]{1,50}$/.test(movieInfo[i][MOVIE_TITLE])){
-            console.log(`$(movieInfo[i][0]} is not valid, Please enter movie title)`);
+            console.log(`${movieInfo[i][0]} is not valid, Please enter movie title)`);
         }
     }
     titleValue = i;
@@ -112,8 +112,14 @@ function branchAction() {
             console.log(`Which movie would you like to view? `);
             chooseTitle();
             calcAverage();
-            console.log(`\x1Bc`);
-            console.log(`\nThe average rating for the move ${movieInfo[titleValue][0]} is ${movieInfo[titleValue][4]} stars. `);
+            if (!/[0-9]/.test(movieInfo[titleValue][4])){
+                console.log(`\x1Bc`);
+                console.log(`${movieInfo[titleValue][0]} has not yet been rated. `)
+            }
+            else {
+                console.log(`\x1Bc`);
+                console.log(`\nThe average rating for ${movieInfo[titleValue][0]} is ${movieInfo[titleValue][4]} stars. `);
+            }
             break;
         case 3:
             setmovieInfo();
@@ -178,9 +184,7 @@ function dispTitles() {
     console.log(`Average Stars         Movie Title`);
     console.log(`-------------         -----------`);
     for (let i =0; i < movieInfo.length; i++){
-        let tempAver = movieInfo[i][4];
-
-        if (!/[0-9]/.test(tempAver)){
+        if (!/[0-9]/.test(movieInfo[i][4])){
             console.log(`   Unrated            ${movieInfo[i][0]}`)
         }
         else {
